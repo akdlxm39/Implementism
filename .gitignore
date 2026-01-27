@@ -1,0 +1,28 @@
+# =========================
+# C++ compile outputs
+# =========================
+*.exe
+*.out
+*.o
+*.obj
+
+# =========================
+# Temporary / debug files
+# =========================
+*.pdb
+*.ilk
+*.stackdump
+
+# =========================
+# VS Code (keep configs)
+# =========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# =========================
+# OS junk
+# =========================
+.DS_Store
+Thumbs.db
