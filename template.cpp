@@ -1,6 +1,16 @@
 #include <iostream>
 using namespace std;
 
+int ret;
+
+void init()
+{
+}
+
+void input()
+{
+}
+
 void solve()
 {
 }
@@ -12,8 +22,13 @@ int main()
 
     int T = 1;
     cin >> T;
-    while (T--)
+    for (int tc = 1; tc <= T; ++tc)
+    {
+        init();
+        input();
         solve();
+        cout << "#" << tc << " " << ret << '\n';
+    }
 
     return 0;
 }
