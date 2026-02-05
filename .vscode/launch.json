@@ -10,10 +10,9 @@
       "preLaunchTask": "C/C++: g++.exe build active file",
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
-      "console": "integratedTerminal",
       "externalConsole": false,
       "MIMode": "gdb",
-      "MIDebuggerPath": "C:\\mingw64\\bin\\gdb.exe",
+      "miDebuggerPath": "C:\\mingw64\\bin\\gdb.exe",
       "setupCommands": [
         {
           "description": "Enable pretty-printing",
