@@ -49,7 +49,7 @@ void solve()
 {
     priority_queue<Node, vector<Node>, cmp> pq;
     pq.push({sy, sx, 0, board_cnt, -1});
-
+    board[sy][sx] = board_cnt++;
     while (!pq.empty())
     {
         Node cur = pq.top();
@@ -64,7 +64,8 @@ void solve()
             else if (cur.len >= 2)
             {
                 ret += cur.len;
-                pq.push({ny, nx, 0, board_cnt++, -1});
+                pq.push({ny, nx, 0, board_cnt, -1});
+                board[ny][nx] = board_cnt++;
             }
             continue;
         }

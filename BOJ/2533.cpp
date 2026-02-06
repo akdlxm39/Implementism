@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 
-
 using namespace std;
 
 int n;
@@ -35,7 +34,6 @@ int dfs(int cur, int prev, int is_early_adapter)
         {
             if (nxt == prev)
                 continue;
-
             ret += min(dfs(nxt, cur, true), dfs(nxt, cur, false));
         }
     }
