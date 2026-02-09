@@ -2,24 +2,28 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "C++ Debug",
+      "name": "C++ Launch (Windows GCC)",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}\\run.exe",
+      // CMake 빌드 결과물 경로
+      "program": "${workspaceFolder}/build/solution.exe",
       "args": [],
-      "preLaunchTask": "C/C++: g++.exe build active file",
-      "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "C:\\mingw64\\bin\\gdb.exe",
       "setupCommands": [
         {
-          "description": "Enable pretty-printing",
+          "description": "Enable pretty-printing for gdb",
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
         }
-      ]
+      ],
+      "preLaunchTask": "CMake: Build Solution",
+      // 'where gdb' 명령어로 나오는 경로를 입력하세요.
+      // 보통 환경변수가 잡혀있으면 "gdb.exe"만 적어도 됩니다.
+      "miDebuggerPath": "C:\\mingw64\\bin\\gdb.exe"
     }
   ]
 }

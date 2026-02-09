@@ -129,7 +129,7 @@ int main()
                         re_p[i].curr->delay_time = re_p[i].dispose_time;
                         re_p[i].curr->p_num = i + 1;
                     }
-                    if (p_queue == nullptrptr)
+                    if (p_queue == nullptr)
                         break;
                 }
             }
@@ -140,7 +140,7 @@ int main()
                 {
                     p_check = 1;
                     re_p[i].curr->delay_time--;
-                    if (re_p[i].curr->delay_time <= 0)
+                    if (re_p[i].curr->delay_time == 0)
                     {
                         if (re_p[i].curr->c_num == a && re_p[i].curr->p_num == b)
                         {
