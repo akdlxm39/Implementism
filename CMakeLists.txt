@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(solution SWEA_B/26113/main.cpp SWEA_B/26113/solution.cpp)
+add_executable(solution mincoding/18460.cpp)
 
 if(NOT MSVC)
     target_compile_options(solution PRIVATE 
@@ -15,5 +15,4 @@ if(NOT MSVC)
         # -Werror         # 모든 경고를 '에러'로 취급 (실수 방지)
         -O3             # SWEA 실전 최적화
     )
-    target_link_options(solution PRIVATE "-Wl,--stack,268435456")
 endif()

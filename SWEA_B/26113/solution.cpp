@@ -128,10 +128,6 @@ void dfs(int curCity)
 
 int calculate(int mCity)
 {
-    if (mCity == 41)
-    {
-        int de = 1;
-    }
     cities[mCity].calcId = ++calcCnt;
     cities[mCity].totalDist = 0;
     cities[mCity].maxDist = 0;

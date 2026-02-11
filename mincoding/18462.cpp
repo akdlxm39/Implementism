@@ -38,20 +38,11 @@ void solve()
         one += (tallest_tree - trees[i]) % 2;
     }
     if (one > two)
-    {
         ret = one * 2 - 1;
-    }
+    else if ((two - one) % 3 == 2)
+        ret = (two - (two - one) / 3 - 1) * 2 + 1;
     else
-    {
-        if ((two - one) % 3 == 2)
-        {
-            ret = (two - (two - one) / 3 - 1) * 2 + 1;
-        }
-        else
-        {
-            ret = (two - (two - one) / 3) * 2;
-        }
-    }
+        ret = (two - (two - one) / 3) * 2;
 }
 
 int main()
