@@ -32,7 +32,7 @@ void input()
 
 int bfs(int i)
 {
-    // 각 지역구의 마을들이 이어져 있다면, cnt == 지역구 마을 수
+    // 각 지역의 마을들이 이어져 있다면, cnt == 지역의 마을 수
     int cnt = 1;
     queue<int> q;
     q.push(i);
@@ -56,9 +56,9 @@ int bfs(int i)
 bool check(int a_cnt)
 {
     // visited 초기화를 여기서 하는 이유 :
-    //  visited는 check마다 두 번의 bfs에서 사용, 같은 마을에 접근할 가능성은 없음 (지역구가 다르기 때문)
+    //  visited는 check마다 두 번의 bfs에서 사용, 같은 마을에 접근할 가능성은 없음 (지역이 다르기 때문)
     memset(visited, false, sizeof(visited));
-    // A지역구에 속한 첫번째 마을을 찾아서 bfs실행 -> a_cnt와 bfs의 리턴값이 같다면 통과
+    // A 지역에 속한 첫번째 마을을 찾아서 bfs실행 -> a_cnt와 bfs의 리턴값이 같다면 통과
     // bfs를 한번만 해야 하므로, break 사용
     for (int i = 0; i < n; ++i)
     {
@@ -69,7 +69,7 @@ bool check(int a_cnt)
             break;
         }
     }
-    // B지역구에 속한 첫번째 마을을 찾아서 bfs실행 -> n-a_cnt와 bfs의 리턴값이 같다면 통과
+    // B 지역에 속한 첫번째 마을을 찾아서 bfs실행 -> n-a_cnt와 bfs의 리턴값이 같다면 통과
     // bfs를 한번만 해야 하므로, break 사용
     for (int i = 0; i < n; ++i)
     {
@@ -80,25 +80,26 @@ bool check(int a_cnt)
             break;
         }
     }
+    // A지역 B지역 모두 통과했다면, 성공
     return true;
 }
 
 void dfs(int cur, int a_cnt, int a_voters)
 {
-    // 종료조건 : 모든 마을이 각 지역구에 배정되었을 때
+    // 종료조건 : 모든 마을이 각 지역에 배정되었을 때
     if (cur == n)
     {
-        // 성공조건 : 각 지역구의 마을들이 이어져 있다면
+        // 성공조건 : 각 지역의 마을들이 이어져 있다면
         if (check(a_cnt))
-            // 두 지역구 유권자 수 차이 : a_voters - (total_voters - a_voters)
+            // 두 지역 유권자 수 차이 : a_voters - (total_voters - a_voters)
             ret = min(ret, abs(a_voters * 2 - total_voters));
         return;
     }
 
-    // cur 마을을 A지역구에 배정
+    // cur 마을을 A 지역에 배정
     a_group[cur] = true;
     dfs(cur + 1, a_cnt + 1, a_voters + voter[cur]);
-    // cur 마을을 A지역구에 미배정 (== B지역구에 배정)
+    // cur 마을을 A 지역에 미배정 (== B 지역에 배정)
     a_group[cur] = false;
     dfs(cur + 1, a_cnt, a_voters);
 }
