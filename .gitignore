@@ -37,3 +37,9 @@ CMakeScripts/
 cmake_install.cmake
 Makefile
 _deps/
+
+
+# =========================
+# CPH
+# =========================
+*/.cph/
