@@ -1,36 +1,32 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 using namespace std;
 
-int arr[10][10];
+int num[3] = {3, 2, 4};
+bool used[3] = {0};
+
+void dfs(int cur, int total)
+{
+    if (cur == 3)
+    {
+        for (int i = 0; i < 3; ++i)
+        {
+            if (used[i])
+                cout << num[i] << ' ';
+        }
+        cout << '\n';
+        return;
+    }
+
+    if (total + num[cur] < 6)
+    {
+        used[cur] = true;
+        dfs(cur + 1, total + num[cur]);
+        used[cur] = false;
+    }
+    dfs(cur + 1, total);
+}
 
 int main()
 {
-    for (int i = 0; i < 10; ++i)
-        for (int j = 0; j < 10; ++j)
-            arr[i][j] = 1;
-    int cnt = 1;
-    for (int i = 0; i < 3; ++i)
-    {
-        arr[2 + i][5 + i] = cnt++;
-        arr[4 + i][1 + i] = cnt++;
-        arr[1 + i][4 - i] = cnt++;
-        arr[5 + i][6 - i] = cnt++;
-    }
-    // for (int i = 0; i < 3; ++i)
-    // {
-    //     arr[7 + i][10 - i] = cnt++;
-    //     arr[10 - i][7 + i] = cnt++;
-    // }
-    for (int i = 0; i < 10; ++i)
-    {
-        for (int j = 0; j < 10; ++j)
-        {
-            if (arr[i][j] >= 10)
-                cout << char(arr[i][j] - 10 + 'A') << ' ';
-            else
-                cout << arr[i][j] << ' ';
-        }
-        cout << '\n';
-    }
+    dfs(0, 0);
 }

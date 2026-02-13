@@ -5,14 +5,25 @@ using namespace std;
 
 struct Customer
 {
-    int id;
-    int time;
-    int a;
-    int b;
+    int arrive_time;
+    int reception_id;
+    int repair_id;
+};
+
+struct Room
+{
+    int delay;
+    int delayed_time;
+    int customer_id;
 };
 
 int ret;
 int n, m, k, a, b;
+
+Customer customers[1001];
+Room receptions[11];
+Room repairs[11];
+
 int time1[10], time2[10];
 int who1[10], who2[10];
 Customer customers[1001];
