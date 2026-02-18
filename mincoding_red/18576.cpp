@@ -38,14 +38,15 @@ void input()
         {
             cin >> map_[y][x];
             dist[y][x] = INT_MAX;
+            tunnel[y][x].clear();
         }
     }
     for (int i = 0; i < m; ++i)
     {
         int ay, ax, by, bx, c;
         cin >> ay >> ax >> by >> bx >> c;
-        tunnel[ay][ax].push_back({by, bx, c});
-        tunnel[by][bx].push_back({ay, ax, c});
+        tunnel[ay - 1][ax - 1].push_back({by - 1, bx - 1, c});
+        tunnel[by - 1][bx - 1].push_back({ay - 1, ax - 1, c});
     }
 }
 
@@ -64,9 +65,10 @@ int dijkstra()
             return cur.cost;
         for (Node nxt : tunnel[cur.y][cur.x])
         {
-            if (dist[nxt.y][nxt.x] <= nxt.cost + cur.cost)
+            nxt.cost += cur.cost;
+            if (dist[nxt.y][nxt.x] <= nxt.cost)
                 continue;
-            dist[nxt.y][nxt.x] = nxt.cost + cur.cost;
+            dist[nxt.y][nxt.x] = nxt.cost;
             pq.push(nxt);
         }
         for (int i = 0; i < 4; ++i)
