@@ -27,7 +27,7 @@ int main()
         init();
         input();
         solve();
-        cout << "#" << tc << " " << ret << '\n';
+        cout << '#' << tc << ' ' << ret << '\n';
     }
 
     return 0;
