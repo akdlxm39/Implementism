@@ -69,7 +69,7 @@ void solve()
         if (degree[i] == 0)
         {
             visited[i] = true;
-            dfs(i, 0);
+            dfs(i, 1);
             if (is_cycle)
                 break;
         }
