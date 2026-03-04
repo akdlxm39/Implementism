@@ -19,7 +19,7 @@ int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    freopen("sample_input.txt", "r", stdin);
+    // freopen("sample_input.txt", "r", stdin);
 
     int T = 1;
     cin >> T;
