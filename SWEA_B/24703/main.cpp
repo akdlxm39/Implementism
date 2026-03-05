@@ -126,7 +126,7 @@ static bool run()
 int main()
 {
     setbuf(stdout, NULL);
-    // freopen("sample_input.txt", "r", stdin);
+    freopen("SWEA_B/24703/sample_input.txt", "r", stdin);
     int T, MARK;
     scanf("%d %d", &T, &MARK);
     for (int tc = 1; tc <= T; tc++)

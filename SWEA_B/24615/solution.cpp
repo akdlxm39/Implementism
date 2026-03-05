@@ -13,7 +13,6 @@ constexpr int dy[4] = {-1, 1, 0, 0}, dx[4] = {0, 0, -1, 1};
 struct Point
 {
     int y, x;
-    int dist;
 };
 struct Edge
 {
@@ -22,9 +21,9 @@ struct Edge
 
 int map_size, stamina;
 int _map[MAP_SIZE_MAX][MAP_SIZE_MAX];
-bool visited[MAP_SIZE_MAX][MAP_SIZE_MAX];
+int visited[MAP_SIZE_MAX][MAP_SIZE_MAX];
 int gate_cnt;
-Point gate_yx[GATE_CNT_MAX];
+Point gate_pos[GATE_CNT_MAX];
 vector<Edge> adj_list[GATE_CNT_MAX];
 bool removed[GATE_CNT_MAX];
 int dist[GATE_CNT_MAX];
@@ -47,30 +46,32 @@ void addGate(int mGateID, int mRow, int mCol)
 {
     for (int y = 0; y < map_size; ++y)
         for (int x = 0; x < map_size; ++x)
-            visited[y][x] = false;
+            visited[y][x] = -1;
+    gate_pos[mGateID] = {mRow, mCol};
     _map[mRow][mCol] = mGateID;
     gate_cnt = mGateID;
     queue<Point> q;
-    visited[mRow][mCol] = true;
-    q.push({mRow, mCol, 0});
+    visited[mRow][mCol] = 0;
+    q.push({mRow, mCol});
     while (!q.empty())
     {
         Point cur = q.front();
         q.pop();
-        if (cur.dist == stamina)
+        if (visited[cur.y][cur.x] == stamina)
             break;
         for (int i = 0; i < 4; ++i)
         {
             int ny = cur.y + dy[i], nx = cur.x + dx[i];
-            if (visited[ny][nx] || _map[ny][nx] == -1)
+            if (visited[ny][nx] != -1 || _map[ny][nx] == -1)
                 continue;
+            int nxt_dist = visited[cur.y][cur.x] + 1;
             if (_map[ny][nx])
             {
-                adj_list[mGateID].push_back({_map[ny][nx], cur.dist + 1});
-                adj_list[_map[ny][nx]].push_back({mGateID, cur.dist + 1});
+                adj_list[mGateID].push_back({_map[ny][nx], nxt_dist});
+                adj_list[_map[ny][nx]].push_back({mGateID, nxt_dist});
             }
-            visited[ny][nx] = true;
-            q.push({ny, nx, cur.dist + 1});
+            visited[ny][nx] = nxt_dist;
+            q.push({ny, nx});
         }
     }
     return;
@@ -78,14 +79,7 @@ void addGate(int mGateID, int mRow, int mCol)
 
 void removeGate(int mGateID)
 {
-    for (int yx = 0; yx < map_size * map_size; ++yx)
-    {
-        if (_map[yx / map_size][yx % map_size] == mGateID)
-        {
-            _map[yx / map_size][yx % map_size] = 0;
-            break;
-        }
-    }
+    _map[gate_pos[mGateID].y][gate_pos[mGateID].x] = 0;
     removed[mGateID] = true;
     return;
 }
