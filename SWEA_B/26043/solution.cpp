@@ -12,163 +12,181 @@ struct PAGE
     char word[7];
 };
 
-struct Word
-{
-    int no;
-    int importance;
-    char word[7];
-    Word *left;
-    Word *right;
-} word_pool[MAX_WORD], *cur, *tmp;
-
 struct Node
 {
-    int word_cnt;
-    Node *children[26];
-    Word *cur_word;
-    Word *min_child_word;
-    Word *max_child_word;
+    int children[26];
+    int child_word_cnt;
+    int word_idx;
+    int good_word_idx;
+};
 
-} trie[MAX_NODE], *root;
+struct Word
+{
+    char word[7];
+    int importance;
+    int left;
+    int right;
+};
+
+struct Result
+{
+    int no, idx;
+};
+
+Word word_pool[MAX_WORD];
+Node trie[MAX_NODE];
 
 int word_cnt;
 int node_cnt;
+int root;
+Result cur;
 
-Word *get_new_word(const char mWord[7], int mImportance)
+int get_new_word(const char mWord[], int mImportance)
 {
-    Word *new_word = &word_pool[word_cnt++];
-    new_word->no = word_cnt;
-    new_word->importance = mImportance;
-    memcpy(new_word->word, mWord, 7);
-    new_word->left = new_word->right = nullptr;
-    return new_word;
+    int idx = word_cnt++;
+    memcpy(word_pool[idx].word, mWord, 7);
+    word_pool[idx].importance = mImportance;
+    word_pool[idx].left = word_pool[idx].right = 0;
+    return idx;
 }
 
-Node *get_new_node(Word *new_word = nullptr)
+int get_new_node()
 {
-    Node *new_node = &trie[node_cnt++];
-    memset(new_node, 0, sizeof(Node));
-    new_node->min_child_word = new_node->max_child_word = new_word;
-    return new_node;
+    int idx = node_cnt++;
+    memset(&trie[idx], 0, sizeof(Node));
+    return idx;
 }
 
-void insert(Node *cur_node, Word *new_word, int depth = 0, Word *left = nullptr, Word *right = nullptr)
+Result insert(const char mWord[], int mImportance)
 {
-    if (new_word->word[depth] == '\0')
+    Result ret;
+    ret.no = 1;
+    ret.idx = get_new_word(mWord, mImportance);
+    int ti = root;
+    for (int wi = 0; mWord[wi] != '\0'; ++wi)
     {
-        cur_node->cur_word = new_word;
-        for (int i = 0; i < 26; ++i)
-            if (cur_node->children[i] != nullptr)
-            {
-                left = cur_node->children[i]->min_child_word;
-                break;
-            }
-        new_word->left = left;
-        new_word->right = right;
-        left->right = new_word;
-        right->left = new_word;
-        cur_node->min_child_word = new_word;
-        return;
+        trie[ti].child_word_cnt++;
+        if (word_pool[trie[ti].good_word_idx].importance < mImportance)
+            trie[ti].good_word_idx = ret.idx;
+        if (trie[ti].word_idx)
+            ret.no++;
+        int ci = ctoi(mWord[wi]);
+        for (int li = ci - 1; li >= 0; --li)
+            if (trie[ti].children[li])
+                ret.no += trie[trie[ti].children[li]].child_word_cnt;
+        if (trie[ti].children[ci] == 0)
+            trie[ti].children[ci] = get_new_node();
+        ti = trie[ti].children[ci];
     }
-    int i = ctoi(new_word->word[depth]);
-    int l, r;
-    for (l = i - 1; l >= 0; --l)
-        if (cur_node->children[l] != nullptr)
-        {
-            left = cur_node->children[l]->max_child_word;
-            break;
-        }
-    for (r = i + 1; r < 26; ++r)
-        if (cur_node->children[r] != nullptr)
-        {
-            new_word->right = cur_node->children[r]->min_child_word;
-            break;
-        }
-    if (cur_node->children[i] == nullptr)
-    {
-        cur_node->children[i] = get_new_node(new_word);
-    }
-    insert(cur_node->children[i], new_word, depth + 1);
-    if (l == -1)
-        cur_node->min_child_word = new_word;
-    if (r == 26)
-        cur_node->max_child_word = new_word;
+    trie[ti].child_word_cnt++;
+    trie[ti].word_idx = ret.idx;
+    trie[ti].good_word_idx = ret.idx;
+    return ret;
 }
 
 void init()
 {
-    word_cnt = 0;
     node_cnt = 0;
+    word_cnt = 1;
     root = get_new_node();
-    tmp = get_new_word("", 0);
-    Word *new_word = get_new_word("a", 1);
-    insert(root, new_word);
-    cur = new_word;
+    cur = insert("a", 1);
     return;
 }
 
 PAGE add(char mWord[], int mImportance)
 {
-    Word *new_word = get_new_word(mWord, mImportance);
-    insert(root, new_word);
-    cur = new_word;
     PAGE res;
-    res.no = cur->no;
-    memcpy(res.word, new_word->word, 7);
+    cur = insert(mWord, mImportance);
+    res.no = cur.no;
+    memcpy(res.word, word_pool[cur.idx].word, 7);
     return res;
 }
 
-PAGE move(int mDir)
+Result find(char mStr[])
 {
-    if (mDir == -1)
-        cur = cur->left;
-    else
-        cur = cur->right;
-    PAGE res;
-    res.no = cur->no;
-    memcpy(res.word, cur->word, 7);
-    return res;
-}
-
-Word *dfs(Node *cur_node, Word *max_word)
-{
-    if (cur_node->cur_word != nullptr)
-        if (cur_node->cur_word->importance > max_word->importance)
-            max_word = cur_node->cur_word;
-    for (int i = 0; i < 26; ++i)
+    Result ret;
+    ret.no = 1;
+    int ti = root;
+    int si = 0;
+    for (; mStr[si] != '\0'; ++si)
     {
-        if (cur_node->children[i] != nullptr)
-            max_word = dfs(cur_node->children[i], max_word);
+        if (trie[ti].word_idx)
+            ret.no++;
+        int ci = ctoi(mStr[si]);
+        if (trie[ti].children[ci] == 0)
+        {
+            ret.no = -1;
+            return ret;
+        }
+        for (int li = 0; li < ci; ++li)
+            if (trie[ti].children[li])
+                ret.no += trie[trie[ti].children[li]].child_word_cnt;
+        ti = trie[ti].children[ci];
     }
-    return max_word;
+    if (trie[ti].word_idx == 0)
+    {
+        ret.idx = trie[ti].good_word_idx;
+        for (; word_pool[ret.idx].word[si] != '\0'; ++si)
+        {
+            if (trie[ti].word_idx)
+                ret.no++;
+            int ci = ctoi(word_pool[ret.idx].word[si]);
+            for (int li = 0; li < ci; ++li)
+                if (trie[ti].children[li])
+                    ret.no += trie[trie[ti].children[li]].child_word_cnt;
+            ti = trie[ti].children[ci];
+        }
+    }
+    else
+        ret.idx = trie[ti].word_idx;
+    return ret;
 }
 
 PAGE search(char mStr[])
 {
-    Node *cur_node = root;
-    for (int i = 0; mStr[i] != '\0'; ++i)
-    {
-        if (cur_node->children[ctoi(mStr[i])] == nullptr)
-            return PAGE{-1, ""};
-        cur_node = cur_node->children[ctoi(mStr[i])];
-    }
-    if (cur_node->cur_word == nullptr)
-    {
-        cur = dfs(cur_node, tmp);
-    }
-    else
-        cur = cur_node->cur_word;
     PAGE res;
-    res.no = cur->no;
-    memcpy(res.word, cur->word, 7);
+    res.no = -1;
+    Result ret = find(mStr);
+    if (ret.no == -1)
+        return res;
+    cur = ret;
+    res.no = cur.no;
+    memcpy(res.word, word_pool[cur.idx].word, 7);
     return res;
 }
 
 PAGE go(int mNo)
 {
-    cur = &word_pool[mNo];
     PAGE res;
-    res.no = cur->no;
-    memcpy(res.word, cur->word, 7);
+    res.no = -1;
+    cur.no = mNo;
+    int last_no = cur.no;
+    int ti = root;
+    while (last_no)
+    {
+        if (trie[ti].word_idx)
+            last_no--;
+        if (last_no == 0)
+            break;
+        for (int ci : trie[ti].children)
+        {
+            if (ci == 0)
+                continue;
+            if (last_no - trie[ci].child_word_cnt <= 0)
+            {
+                ti = ci;
+                break;
+            }
+            last_no -= trie[ci].child_word_cnt;
+        }
+    }
+    cur.idx = trie[ti].word_idx;
+    res.no = cur.no;
+    memcpy(res.word, word_pool[cur.idx].word, 7);
     return res;
+}
+
+PAGE move(int mDir)
+{
+    return go(cur.no + mDir);
 }

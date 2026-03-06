@@ -47,45 +47,77 @@ static bool run()
         case CMD_INIT:
             init();
             okay = true;
+            {
+                printf("%d : ", cmd);
+            }
             break;
         case CMD_ADD:
             scanf("%s %d", mWord, &mImportance);
             strcpy(ans, mWord);
-            res = add(mWord, mImportance);
             scanf("%d", &no);
+            {
+                printf("%d %s %d %d : ", cmd, mWord, mImportance, no);
+            }
+            res = add(mWord, mImportance);
+
             if (res.no != no || strcmp(res.word, ans) != 0)
                 okay = false;
+            {
+                printf("%d %s : ", res.no, res.word);
+            }
             break;
         case CMD_MOVE:
             scanf("%d", &mDir);
-            res = move(mDir);
             scanf("%d %s", &no, ans);
+            {
+                printf("%d %d %d %s : ", cmd, mDir, no, ans);
+            }
+            res = move(mDir);
             if (res.no != no || strcmp(res.word, ans) != 0)
                 okay = false;
+            {
+                printf("%d %s : ", res.no, res.word);
+            }
             break;
         case CMD_SEARCH:
             scanf("%s", mStr);
-            res = search(mStr);
             scanf("%d", &no);
+            if (no != -1)
+                scanf("%s", ans);
+            {
+                printf("%d %s %d %s : ", cmd, mStr, no, ans);
+            }
+            res = search(mStr);
             if (res.no != no)
                 okay = false;
-            if (no != -1)
+            if (no != -1 && strcmp(res.word, ans) != 0)
+                okay = false;
             {
-                scanf("%s", ans);
-                if (strcmp(res.word, ans) != 0)
-                    okay = false;
+                printf("%d %s : ", res.no, res.word);
             }
             break;
         case CMD_GO:
             scanf("%d", &mNo);
-            res = go(mNo);
             scanf("%s", ans);
+            {
+                printf("%d %d %s : ", cmd, mNo, ans);
+            }
+            res = go(mNo);
             if (res.no != mNo || strcmp(res.word, ans) != 0)
                 okay = false;
+            {
+                printf("%d %s : ", res.no, res.word);
+            }
             break;
         default:
             okay = false;
             break;
+        }
+        {
+            if (okay)
+                printf("true\n");
+            else
+                printf("false\n");
         }
     }
 
@@ -98,7 +130,6 @@ int main()
     freopen("SWEA_B/26043/sample_input.txt", "r", stdin);
 
     int TC, MARK;
-
     scanf("%d %d", &TC, &MARK);
     for (int tc = 1; tc <= TC; ++tc)
     {
