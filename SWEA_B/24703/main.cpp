@@ -40,6 +40,9 @@ static bool run()
     {
         int query;
         scanf("%d", &query);
+        {
+            printf("%d : ", query);
+        }
         if (query == CMD_INIT)
         {
             int N, mWidth, mHeight;
@@ -72,11 +75,26 @@ static bool run()
                 scanf("%d", &mUpShapes[i]);
             for (int i = 0; i < 3; i++)
                 scanf("%d", &mDownShapes[i]);
-            int ret = checkStructures(mLengths, mUpShapes, mDownShapes);
             scanf("%d", &ans);
+            {
+                for (int i = 0; i < 3; i++)
+                    printf("%d ", mLengths[i]);
+                printf(": ");
+                for (int i = 0; i < 3; i++)
+                    printf("%d ", mUpShapes[i]);
+                printf(": ");
+                for (int i = 0; i < 3; i++)
+                    printf("%d ", mDownShapes[i]);
+                printf(": ");
+                printf("%d : ", ans);
+            }
+            int ret = checkStructures(mLengths, mUpShapes, mDownShapes);
             if (ans != ret)
             {
                 ok = false;
+            }
+            {
+                printf("%d : ", ret);
             }
         }
         else if (query == CMD_ADD)
@@ -90,18 +108,32 @@ static bool run()
                 scanf("%d", &mUpShapes[i]);
             for (int i = 0; i < 3; i++)
                 scanf("%d", &mDownShapes[i]);
-            int ret = addStructures(mLengths, mUpShapes, mDownShapes);
             scanf("%d", &ans);
+            {
+                for (int i = 0; i < 3; i++)
+                    printf("%d ", mLengths[i]);
+                printf(": ");
+                for (int i = 0; i < 3; i++)
+                    printf("%d ", mUpShapes[i]);
+                printf(": ");
+                for (int i = 0; i < 3; i++)
+                    printf("%d ", mDownShapes[i]);
+                printf(": ");
+                printf("%d : ", ans);
+            }
+            int ret = addStructures(mLengths, mUpShapes, mDownShapes);
             if (ans != ret)
             {
                 ok = false;
+            }
+            {
+                printf("%d : ", ret);
             }
         }
         else if (query == CMD_POUR)
         {
             int mWater;
             scanf("%d", &mWater);
-            Result ret = pourIn(mWater);
 
             int ans_height = 0;
             int ans_used = 0;
@@ -110,6 +142,15 @@ static bool run()
             {
                 scanf("%d %d", &ans_height, &ans_used);
             }
+            {
+                printf("%d : %d ", mWater, ans);
+                if (ans != 0)
+                {
+                    printf("%d %d ", ans_height, ans_used);
+                }
+                printf(": ");
+            }
+            Result ret = pourIn(mWater);
             if (ans != 0 && (ans != ret.ID || ans_height != ret.height || ans_used != ret.used))
             {
                 ok = false;
@@ -118,6 +159,15 @@ static bool run()
             {
                 ok = false;
             }
+            {
+                printf("%d %d %d : ", ret.ID, ret.height, ret.used);
+            }
+        }
+        {
+            if (ok)
+                printf("okay\n");
+            else
+                printf("fail\n");
         }
     }
     return ok;
