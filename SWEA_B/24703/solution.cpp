@@ -29,6 +29,7 @@ struct Tank
 
 int tanks_cnt, width, height;
 vector<Tank> tanks;
+vector<int> tmp_lengths;
 
 void init(int N, int mWidth, int mHeight, int mIDs[], int mLengths[][MAX_WIDTH], int mUpShapes[][MAX_WIDTH])
 {
@@ -140,7 +141,7 @@ Result pourIn(int mWater)
     Result ret = Result{0, 0, 0};
     for (const Tank &tank : tanks)
     {
-        vector<int> tmp_lengths = vector<int>(tank.lengths);
+        tmp_lengths.assign(tank.lengths.begin(), tank.lengths.end());
         sort(tmp_lengths.begin(), tmp_lengths.end());
         // cout << "check len : ";
         // for (int l : tmp_lengths)
