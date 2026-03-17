@@ -31,7 +31,7 @@ struct Tank
 int tanks_cnt, width, height;
 vector<Tank> tanks;
 vector<int> tmp_lengths;
-unordered_set<int> candidate[1000];
+unordered_set<int> candidate[64];
 
 void init(int N, int mWidth, int mHeight, int mIDs[], int mLengths[][MAX_WIDTH], int mUpShapes[][MAX_WIDTH])
 {
@@ -40,9 +40,12 @@ void init(int N, int mWidth, int mHeight, int mIDs[], int mLengths[][MAX_WIDTH],
     height = mHeight;
     tanks.clear();
     tanks.reserve(N);
+    for (int i = 0; i < 64; ++i)
+        candidate[i].clear();
     for (int i = 0; i < tanks_cnt; ++i)
         tanks.emplace_back(mIDs[i], mLengths[i], mUpShapes[i], width);
-    sort(tanks.begin(), tanks.end());
+    sort(tanks.begin(), tanks.end(), [](const Tank &a, const Tank &b)
+         { return a.ID < b.ID; });
     for (int i = 0; i < tanks_cnt; ++i)
     {
         const Tank &tank = tanks[i];
