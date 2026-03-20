@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(solution SWEA_B/25009/main.cpp SWEA_B/25009/solution.cpp)
+add_executable(solution SWEA_B/25430/main.cpp SWEA_B/25430/solution.cpp)
 
 if(NOT MSVC)
     target_compile_options(solution PRIVATE 
