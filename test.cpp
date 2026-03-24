@@ -1,96 +1,34 @@
 #include <iostream>
-#include <vector>
+#include <unordered_map>
 using namespace std;
-
-int ret;
-int n, cnt;
-vector<int> v[101];
-int degree[101];
-bool visited[101];
-bool checked[101];
-bool is_cycle;
-
-void init()
-{
-    ret = 0;
-    cnt = 0;
-    is_cycle = false;
-    for (int i = 1; i <= n; ++i)
-    {
-        v[i].clear();
-        visited[i] = false;
-        checked[i] = false;
-    }
-}
-
-void input()
-{
-    cin >> n;
-    for (int i = 1; i <= n; ++i)
-    {
-        cin >> degree[i];
-        for (int j = 0; i < degree[i]; ++j)
-        {
-            int x;
-            cin >> x;
-            v[x].push_back(i);
-        }
-    }
-}
-
-void dfs(int cur, int lev)
-{
-    if (ret < lev)
-        ret = lev;
-    if (!checked[cur])
-    {
-        checked[cur] = true;
-        cnt++;
-    }
-    for (int i = 0; i < v[cur].size(); ++i)
-    {
-        if (visited[v[cur][i]])
-        {
-            is_cycle = true;
-            return;
-        }
-        visited[v[cur][i]] = true;
-        dfs(v[cur][i], lev + 1);
-        visited[v[cur][i]] = false;
-        if (is_cycle)
-            return;
-    }
-}
-
-void solve()
-{
-    for (int i = 1; i <= n; ++i)
-    {
-        if (degree[i] == 0)
-        {
-            visited[i] = true;
-            dfs(i, 1);
-            if (is_cycle)
-                break;
-        }
-    }
-    if (cnt != n || is_cycle)
-        ret = -1;
-}
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
+    unordered_map<int, pair<int, int>> map;
+    map[1] = {4, 6};
+    map[5] = {11, 11};
 
-    int T = 1;
-    cin >> T;
-    for (int tc = 1; tc <= T; ++tc)
+    // 얘는 같은 iterator 같지만, 실제로는 list<pair>의 iterator
+    for (auto it : map)
     {
-        init();
-        input();
-        solve();
-        cout << "#" << tc << " " << ret << '\n';
+        cout << typeid(it).name() << '\n';
+
+        cout << "key : " << it.first << '\n';
+        cout << "pair.first : " << it.second.first << '\n';
+        cout << "pair.second : " << it.second.second << '\n';
+        cout << '\n';
+    }
+
+    // hashmap == iter를 pair로 관리해
+    // 근데 아래는 iter가 그 페어의 주소를 가지고 있어
+    // pair가 주르르르륵 있고, 그거를 "주소로" 순회하는 애;
+    for (auto it = map.begin(); it != map.end(); ++it)
+    {
+        cout << typeid(it).name() << '\n';
+        cout << "key : " << it->first << '\n';
+        cout << "pair.first : " << it->second.first << '\n';
+        cout << "pair.second : " << it->second.second << '\n';
+        cout << '\n';
     }
 
     return 0;
