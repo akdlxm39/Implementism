@@ -17,70 +17,60 @@ void lazy_update(int bNum)
         int endIdx = min(n, startIdx + bucketSize);
         for (int i = startIdx; i < endIdx; ++i)
             arr[i] += lazy[bNum];
-        bucket[bNum] += lazy[bNum] * (endIdx - startIdx + 1);
+        bucket[bNum] += lazy[bNum] * (endIdx - startIdx);
         lazy[bNum] = 0;
     }
 }
 
 void update(int left, int right, ll delta)
 {
-    if (left % bucketSize)
+    int bLeft = left / bucketSize;
+    int bRight = right / bucketSize;
+
+    if (bLeft == bRight)
     {
-        int bNum = left / bucketSize;
-        int idx = bucketSize * bNum;
-        for (idx; idx < left; ++idx)
-            arr[idx] += lazy[bNum];
-        for (idx; idx < (bNum + 1) * bucketSize; ++idx)
-            arr[idx] += lazy[bNum] + delta;
-        bucket[bNum] += bucketSize * lazy[bNum];
-        lazy[bNum] = 0;
+        lazy_update(bLeft);
+        for (int i = left; i <= right; ++i)
+            arr[i] += delta;
+        bucket[bLeft] += delta * (right - left + 1);
+        return;
     }
-    for (int idx = (left - 1) / bucketSize + 1; idx < (right + 1) / bucketSize; ++idx)
+    lazy_update(bLeft);
+    for (int i = left; i < (bLeft + 1) * bucketSize; ++i)
     {
-        lazy[idx] += delta;
+        arr[i] += delta;
+        bucket[bLeft] += delta;
     }
-    if ((right + 1) % bucketSize)
+    for (int b = bLeft + 1; b < bRight; ++b)
+        lazy[b] += delta;
+    lazy_update(bRight);
+    for (int i = bRight * bucketSize; i <= right; ++i)
     {
-        int bNum = right / bucketSize;
-        int idx = bucketSize * bNum;
-        for (idx; idx <= right; ++idx)
-            arr[idx] += lazy[bNum] + delta;
-        for (idx; idx < min(n, (bNum + 1) * bucketSize); ++idx)
-            arr[idx] += lazy[bNum];
-        bucket[bNum] += bucketSize * lazy[bNum];
-        lazy[bNum] = 0;
+        arr[i] += delta;
+        bucket[bRight] += delta;
     }
 }
 
 ll query(int left, int right)
 {
     ll ret = 0;
-    if (left % bucketSize)
+    int bLeft = left / bucketSize;
+    int bRight = right / bucketSize;
+    if (bLeft == bRight)
     {
-        int bNum = left / bucketSize;
-        int idx = bucketSize * bNum;
-        for (idx; idx < left; ++idx)
-            arr[idx] += lazy[bNum];
-        for (idx; idx < (bNum + 1) * bucketSize; ++idx)
-            ret += arr[idx] += lazy[bNum];
-        bucket[bNum] += bucketSize * lazy[bNum];
-        lazy[bNum] = 0;
+        lazy_update(bLeft);
+        for (int i = left; i <= right; ++i)
+            ret += arr[i];
+        return ret;
     }
-    for (int idx = (left - 1) / bucketSize + 1; idx < (right + 1) / bucketSize; ++idx)
-    {
-        ret += bucket[idx] + lazy[idx];
-    }
-    if ((right + 1) % bucketSize)
-    {
-        int bNum = right / bucketSize;
-        int idx = bucketSize * bNum;
-        for (idx; idx <= right; ++idx)
-            ret += arr[idx] += lazy[bNum];
-        for (idx; idx < min(n, (bNum + 1) * bucketSize); ++idx)
-            arr[idx] += lazy[bNum];
-        bucket[bNum] += bucketSize * lazy[bNum];
-        lazy[bNum] = 0;
-    }
+    lazy_update(bLeft);
+    for (int i = left; i < (bLeft + 1) * bucketSize; ++i)
+        ret += arr[i];
+    for (int b = bLeft + 1; b < bRight; ++b)
+        ret += bucket[b] + lazy[b] * bucketSize;
+    lazy_update(bRight);
+    for (int i = bRight * bucketSize; i <= right; ++i)
+        ret += arr[i];
     return ret;
 }
 
@@ -88,6 +78,27 @@ void solve()
 {
     cin >> n >> m >> k;
     bucketSize = sqrt(n);
+    for (int i = 1; i <= n; ++i)
+    {
+        cin >> arr[i];
+        bucket[i / bucketSize] += arr[i];
+    }
+    int a, b, c;
+    ll d;
+    for (int i = 0; i < m + k; ++i)
+    {
+        cin >> a;
+        if (a == 1)
+        {
+            cin >> b >> c >> d;
+            update(b, c, d);
+        }
+        else if (a == 2)
+        {
+            cin >> b >> c;
+            cout << query(b, c) << '\n';
+        }
+    }
 }
 
 int main()
