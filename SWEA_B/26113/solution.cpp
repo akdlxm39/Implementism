@@ -1,9 +1,10 @@
+#include <algorithm>
 #include <cstring>
 #include <utility>
-#include <algorithm>
 
 #define HASH_SIZE 50021
 
+// id, from, to, dist, isActive, nxtEdge, nxtHash
 struct Edge
 {
     int id;
@@ -132,8 +133,7 @@ void dijkstra_loop()
         {
             if (!edgePool[edgeIdx].isActive)
                 continue;
-            HeapNode nxt = {edgePool[edgeIdx].to,
-                            cur.dist + edgePool[edgeIdx].dist,
+            HeapNode nxt = {edgePool[edgeIdx].to, cur.dist + edgePool[edgeIdx].dist,
                             std::max(cur.maxLen, edgePool[edgeIdx].dist)};
             if (nodes[nxt.id].calcCnt == calcCnt &&
                 (nodes[nxt.id].dist < nxt.dist ||
@@ -174,12 +174,9 @@ void add(int mId, int sCity, int eCity, int mDistance)
         return;
     if (nodes[sCity].calcCnt == calcCnt)
     {
-        HeapNode nxt = {eCity,
-                        nodes[sCity].dist + mDistance,
-                        std::max(nodes[sCity].maxLen, mDistance)};
+        HeapNode nxt = {eCity, nodes[sCity].dist + mDistance, std::max(nodes[sCity].maxLen, mDistance)};
         if (nodes[nxt.id].calcCnt == calcCnt &&
-            (nodes[nxt.id].dist < nxt.dist ||
-             (nodes[nxt.id].dist == nxt.dist && nodes[nxt.id].maxLen <= nxt.maxLen)))
+            (nodes[nxt.id].dist < nxt.dist || (nodes[nxt.id].dist == nxt.dist && nodes[nxt.id].maxLen <= nxt.maxLen)))
             return;
         push(nxt);
         nodes[nxt.id].dist = nxt.dist;
@@ -191,8 +188,7 @@ void add(int mId, int sCity, int eCity, int mDistance)
     {
         int nxtDist = nodes[sCity].dist + mDistance;
         int nxtMaxLen = std::max(nodes[sCity].maxLen, mDistance);
-        if (nodes[eCity].calcCnt != calcCnt ||
-            nxtDist < nodes[eCity].dist ||
+        if (nodes[eCity].calcCnt != calcCnt || nxtDist < nodes[eCity].dist ||
             (nxtDist == nodes[eCity].dist && nxtMaxLen < nodes[eCity].maxLen))
         {
             nodes[eCity].dist = nxtDist;
@@ -225,7 +221,8 @@ void remove(int mId)
         return;
     if (nodes[to].calcCnt != calcCnt || nodes[from].calcCnt != calcCnt)
         return;
-    if (nodes[to].dist < nodes[from].dist + dist || (nodes[to].dist == nodes[from].dist + dist && nodes[to].maxLen < dist))
+    if (nodes[to].dist < nodes[from].dist + dist ||
+        (nodes[to].dist == nodes[from].dist + dist && nodes[to].maxLen < dist))
         return;
     isDirty = true;
     return;
