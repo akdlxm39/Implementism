@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(solution SWEA_B/26416/main.cpp SWEA_B/26416/solution.cpp)
+# add_executable(solution SWEA_B/26416/main.cpp SWEA_B/26416/solution.cpp)
+add_executable(solution BOJ/15681.cpp)
 
 if(NOT MSVC)
     target_compile_options(solution PRIVATE 
