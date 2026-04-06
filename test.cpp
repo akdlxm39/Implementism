@@ -60,5 +60,6 @@ ll query(int node, int left, int right, int start, int end)
 
 int main()
 {
+    
     return 0;
 }
