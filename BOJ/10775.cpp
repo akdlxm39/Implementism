@@ -26,16 +26,14 @@ void solve()
     cin >> g >> p;
     for (int i = 1; i <= g; ++i)
         pre[i] = i;
-    for (int i = 0, x; i < p; ++i)
+    int ans, x;
+    for (ans = 0; ans < p; ++ans)
     {
         cin >> x;
         if (!dock(x))
-        {
-            cout << i << '\n';
-            return;
-        }
+            break;
     }
-    cout << p << '\n';
+    cout << ans << '\n';
     return;
 }
 
