@@ -1,28 +1,31 @@
 #include <iostream>
+#include <algorithm>
+#include <numeric>
+#include <cmath>
 
 using namespace std;
 
-int n, t, p;
-int sizes[6];
+int n;
+int level[300'001];
 
 void solve()
 {
     cin >> n;
-    for (int i = 0; i < 6; ++i)
-        cin >> sizes[i];
-    cin >> t >> p;
-    int ans1 = 0, ans2 = 0, ans3 = 0;
-    for (int i = 0; i < 6; ++i)
-        ans1 += (sizes[i] + t - 1) / t;
-    ans2 = n / p;
-    ans3 = n % p;
-    cout << ans1 << endl
-         << ans2 << ' ' << ans3 << endl;
+    if (n == 0)
+    {
+        cout << 0 << '\n';
+        return;
+    }
+    for (int i = 0; i < n; ++i)
+        cin >> level[i];
+    sort(level, level + n);
+    int x = round(double(n) * 0.15);
+    double mean = accumulate(level + x, level + n - x, 0.0) / (n - 2 * x);
+    cout << round(mean) << '\n';
 }
 
 int main()
 {
-    // 빠른 입출력
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 
