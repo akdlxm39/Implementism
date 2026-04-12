@@ -1,7 +1,6 @@
 #include <iostream>
-using namespace std;
 
-int ret;
+using namespace std;
 
 void init()
 {
@@ -15,6 +14,11 @@ void solve()
 {
 }
 
+void output(int testCase)
+{
+    cout << '#' << testCase << ' ' << "" << '\n';
+}
+
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -23,12 +27,12 @@ int main()
 
     int T = 1;
     cin >> T;
-    for (int tc = 1; tc <= T; ++tc)
+    for (int testCase = 1; testCase <= T; ++testCase)
     {
         init();
         input();
         solve();
-        cout << '#' << tc << ' ' << ret << '\n';
+        output(testCase);
     }
 
     return 0;
