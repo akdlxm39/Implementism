@@ -1,27 +1,60 @@
 #include <iostream>
-#include <algorithm>
-#include <numeric>
-#include <cmath>
+#include <string>
+#include <vector>
+#include <queue>
 
 using namespace std;
 
-int n;
-int level[300'001];
+int n, m, ans;
+string map_[600];
+bool visited[600][600];
+
+struct Point
+{
+    int y, x;
+    Point operator+(Point other) const
+    {
+        return {y + other.y, x + other.x};
+    }
+    bool isValid() const
+    {
+        return 0 <= y && y < n && 0 <= x && x < m && map_[y][x] != 'X' && !visited[y][x];
+    }
+};
+
+const Point DIR[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
 void solve()
 {
-    cin >> n;
-    if (n == 0)
-    {
-        cout << 0 << '\n';
-        return;
-    }
+    cin >> n >> m;
+    queue<Point> q;
     for (int i = 0; i < n; ++i)
-        cin >> level[i];
-    sort(level, level + n);
-    int x = round(double(n) * 0.15);
-    double mean = accumulate(level + x, level + n - x, 0.0) / (n - 2 * x);
-    cout << round(mean) << '\n';
+    {
+        cin >> map_[i];
+        size_t j = map_[i].find('I');
+        if (j != string::npos)
+        {
+            q.push({i, int(j)});
+            visited[i][j] = true;
+        }
+    }
+    while (!q.empty())
+    {
+        Point cur = q.front();
+        q.pop();
+        if (map_[cur.y][cur.x] == 'P')
+            ans++;
+        for (Point d : DIR)
+        {
+            Point nxt = cur + d;
+            if (nxt.isValid())
+            {
+                q.push(nxt);
+                visited[nxt.y][nxt.x] = true;
+            }
+        }
+    }
+    cout << (ans ? to_string(ans) : "TT") << '\n';
 }
 
 int main()
