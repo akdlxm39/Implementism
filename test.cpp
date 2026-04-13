@@ -7,6 +7,7 @@ using namespace std;
 
 int n, m, ans;
 string map_[600];
+bool visited[600][600];
 
 struct Point
 {
@@ -17,37 +18,42 @@ struct Point
     }
     bool isValid() const
     {
-        return 0 <= y && y < n && 0 <= x && x < m && map_[y][x] != 'X';
+        return 0 <= y && y < n && 0 <= x && x < m && map_[y][x] != 'X' && !visited[y][x];
     }
 };
 
 const Point DIR[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-int dfs(Point cur)
-{
-    int ret = map_[cur.y][cur.x] == 'P';
-    map_[cur.y][cur.x] = 'X';
-    for (Point d : DIR)
-    {
-        Point nxt = cur + d;
-        if (nxt.isValid())
-            ret += dfs(nxt);
-    }
-    return ret;
-}
-
 void solve()
 {
     cin >> n >> m;
-    Point start;
+    queue<Point> q;
     for (int i = 0; i < n; ++i)
     {
         cin >> map_[i];
         size_t j = map_[i].find('I');
         if (j != string::npos)
-            start.y = i, start.x = j;
+        {
+            q.push({i, int(j)});
+            visited[i][j] = true;
+        }
     }
-    int ans = dfs(start);
+    while (!q.empty())
+    {
+        Point cur = q.front();
+        q.pop();
+        if (map_[cur.y][cur.x] == 'P')
+            ans++;
+        for (Point d : DIR)
+        {
+            Point nxt = cur + d;
+            if (nxt.isValid())
+            {
+                q.push(nxt);
+                visited[nxt.y][nxt.x] = true;
+            }
+        }
+    }
     cout << (ans ? to_string(ans) : "TT") << '\n';
 }
 
