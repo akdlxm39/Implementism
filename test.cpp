@@ -1,30 +1,27 @@
 #include <iostream>
-#include <algorithm>
 
 using namespace std;
 
-int n, len, max_len;
-int tanghuru[200'000];
-int fruit[10];
-
-void solve()
+int solution(int n, int w, int num)
 {
-    cin >> n;
-    for (int i = 0; i < n; ++i)
-        cin >> tanghuru[i];
-    int l = 0, r = 0, cnt = 0;
-    while (r <= n)
-    {
-        fruit[tanghuru[r++]]++;
-    }
-}
+    if (n % w == 0)
+        return (n / w) - ((num - 1) / w);
 
-int main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
+    int total_full_rows = n / w;
+    int target_row = (num - 1) / w;
+    int blocks_in_top_row = n % w;
+    int target_col = (num - 1) % w + 1;
 
-    solve();
+    bool is_top_row_reversed = (total_full_rows % 2 != 0);
+    bool is_target_row_reversed = (target_row % 2 != 0);
 
-    return 0;
+    if (is_top_row_reversed != is_target_row_reversed)
+        target_col = w - target_col + 1;
+
+    int height_diff = total_full_rows - target_row;
+
+    if (target_col <= blocks_in_top_row)
+        height_diff += 1;
+
+    return height_diff;
 }
