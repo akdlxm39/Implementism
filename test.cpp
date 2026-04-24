@@ -1,27 +1,38 @@
+#include <string>
+#include <vector>
+#include <algorithm>
 #include <iostream>
 
 using namespace std;
 
-int solution(int n, int w, int num)
+#define SHEEP 0
+#define WOLF 1
+
+struct Node
 {
-    if (n % w == 0)
-        return (n / w) - ((num - 1) / w);
+    int id;
+    int childCnt;
+    int children[2];
+};
+vector<Node> tree;
 
-    int total_full_rows = n / w;
-    int target_row = (num - 1) / w;
-    int blocks_in_top_row = n % w;
-    int target_col = (num - 1) % w + 1;
+int dfs(int cur, int sheepCnt, int wolfCnt)
+{
+    pair<int, int> pii1, pii2;
+}
 
-    bool is_top_row_reversed = (total_full_rows % 2 != 0);
-    bool is_target_row_reversed = (target_row % 2 != 0);
-
-    if (is_top_row_reversed != is_target_row_reversed)
-        target_col = w - target_col + 1;
-
-    int height_diff = total_full_rows - target_row;
-
-    if (target_col <= blocks_in_top_row)
-        height_diff += 1;
-
-    return height_diff;
+int solution(vector<int> info, vector<vector<int>> edges)
+{
+    int answer = 0;
+    tree.assign(info.size(), Node());
+    for (int i = 0; i < info.size(); ++i)
+        tree[i].id = info[i];
+    for (int i = 0; i < edges.size(); ++i)
+        tree[edges[i][0]].children[tree[edges[i][0]].childCnt++] = edges[i][1];
+    for (Node node : tree)
+    {
+        cout << node.id << ' ' << node.childCnt << ' ' << node.children[0] << ' ' << node.children[1] << '\n';
+    }
+    answer = dfs(0, 0, 0);
+    return answer;
 }
