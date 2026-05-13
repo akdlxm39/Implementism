@@ -5,15 +5,12 @@
       "name": "CMake 솔루션 디버깅",
       "type": "cppdbg",
       "request": "launch",
-      // CMake 빌드 결과물 경로
-      "program": "${workspaceFolder}/build/solution.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "C:/mingw64/bin/gdb.exe",
       "setupCommands": [
         {
           "description": "Enable pretty-printing for gdb",
@@ -21,29 +18,41 @@
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "CMake: Build Solution"
-      // 'where gdb' 명령어로 나오는 경로를 입력하세요.
-      // 보통 환경변수가 잡혀있으면 "gdb.exe"만 적어도 됩니다.
+      "preLaunchTask": "CMake: Build Solution",
+      "windows": {
+        "program": "${workspaceFolder}/build/solution.exe",
+        "miDebuggerPath": "C:/mingw64/bin/gdb.exe"
+      },
+      "linux": {
+        "program": "${workspaceFolder}/build/solution",
+        "miDebuggerPath": "/usr/bin/gdb"
+      }
     },
     {
       "name": "단일 파일 디버깅",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/run.exe",
       "args": [],
-      "preLaunchTask": "C/C++: g++.exe build active file",
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "C:/mingw64/bin/gdb.exe",
       "setupCommands": [
         {
           "description": "Enable pretty-printing",
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
         }
-      ]
+      ],
+      "preLaunchTask": "C/C++: g++ build active file",
+      "windows": {
+        "program": "${workspaceFolder}/run.exe",
+        "miDebuggerPath": "C:/mingw64/bin/gdb.exe"
+      },
+      "linux": {
+        "program": "${fileDirname}/run",
+        "miDebuggerPath": "/usr/bin/gdb"
+      }
     }
   ]
 }
