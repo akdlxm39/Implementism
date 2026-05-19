@@ -93,7 +93,7 @@ static bool run()
 int main()
 {
     setbuf(stdout, NULL);
-    freopen("SWEA_B/24992/sample_input.txt", "r", stdin);
+    freopen("SWEA_B/24992_ott/sample_input.txt", "r", stdin);
 
     int TC, MARK;
 
